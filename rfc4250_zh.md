@@ -26,4 +26,5 @@ uint32  recipient channel
 string  data
 ```
 文档使用单引号标记字段，使用双引号标记字段中的值。比如，字段'data'的可选值为"foo"和"bar"。
-# 4. IANA 
+# 4. IANA 注意事项
+这个文档是SSH协议的IANA注意事项，如[SSH-ARCH]、[SSH-TRANS]、[SSH-USERAUTH]和[SSH-CONECT]文档中所定义的。这一段包含对命名空间命名时的一些常规、注册项的初始化状态和将要分配项的指令。
