@@ -27,4 +27,64 @@ string  data
 ```
 文档使用单引号标记字段，使用双引号标记字段中的值。比如，字段'data'的可选值为"foo"和"bar"。
 # 4. IANA 注意事项
-这个文档是SSH协议的IANA注意事项，如[SSH-ARCH]、[SSH-TRANS]、[SSH-USERAUTH]和[SSH-CONECT]文档中所定义的。这一段包含对命名空间命名时的一些常规、注册项的初始化状态和将要分配项的指令。
+这个文档全部是SSH协议的IANA注意事项，这些注意事项在[SSH-ARCH]、[SSH-TRANS]、[SSH-CONNECT]这些文档中都有描述。这一章节包含命名空间取名的规则、注册表的初始状态和将要分配的值的说明。
+## 4.1. 消息编号
+消息编号使用一个字节对数据包的负载做出声明。
+### 4.1.1. 协议
+协议数据包中的消息编号从1到255这255个数字中取值。这些编号按照以下方式进行分配：
+- 传输层协议</br>
+1 - 19 通用的传输层消息（例如断开连接、忽略、调试等等消息）</br>
+20 - 29 算法协商消息</br>
+30 - 49 特定的密钥交换方法（当使用不同的认证方法时，这些编号可以复用表示不同的含义）
+
+- 用户认证协议</br>
+50 - 59 通用的用户认证消息</br>
+60 - 79 特定的用户认证方法（当使用不同的认证方法时，这些编号可以服用表示不同的含义）
+
+- 连接协议</br>
+80 - 89 通用的连接协议</br>
+90 - 127 和通道有关的消息
+
+- 为客户端协议保留的编号：128 - 191
+
+- 本地扩展编号
+
+### 4.1.2. 初始分配值
+消息ID值的初始分配的值如下表所示：
+
+| Message ID | 值 | 相关文档
+|:--|:--|:--|
+|SSH_MSG_DISCONNECT|1|[SSH-TRANS]|
+| SSH_MSG_IGNORE | 2 | [SSH-TRANS] |
+| SSH_MSG_UNIMPLEMENTED | 3 | [SSH-TRANS] |
+| SSH_MSG_DEBUG | 4 | [SSH-TRANS] |
+| SSH_MSG_SERVICE_REQUEST | 5 | [SSH-TRANS] |
+| SSH_MSG_SERVICE_ACCEPT | 6 | [SSH-TRANS] |
+| SSH_MSG_KEXINIT | 20 | [SSH-TRANS] |
+| SSH_MSG_NEWKEYS | 21 | [SSH-TRANS] |
+| SSH_MSG_USERAUTH_REQUEST | 50 | [SSH-USERAUTH] |
+| SSH_MSG_USERAUTH_FAILURE | 51 | [SSH-USERAUTH] |
+| SSH_MSG_USERAUTH_SUCCESS | 52 | [SSH-USERAUTH] |
+| SSH_MSG_USERAUTH_BANNER | 53 | [SSH-USERAUTH] |
+| SSH_MSG_GLOBAL_REQUEST | 80 | [SSH-CONNECT] |
+| SSH_MSG_REQUEST_SUCCESS | 81 | [SSH-CONNECT] |
+| SSH_MSG_REQUEST_FAILURE | 82 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_OPEN | 90 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_OPEN_CONFIRMATION | 91 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_OPEN_FAILURE | 92 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_WINDOW_ADJUST | 93 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_DATA | 94 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_EXTENDED_DATA | 95 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_EOF | 96 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_CLOSE | 97 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_REQUEST | 98 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_SUCCESS | 99 | [SSH-CONNECT] |
+| SSH_MSG_CHANNEL_FAILURE | 100 | [SSH-CONNECT] |
+### 4.1.3. 其他将要分配的值
+在1到29、50到59和80到127之间的新的消息号的分配，必须通过STANDARDS ACTION方法进行分配，STANDARDS ACTION在[RFC2434]中有描述。</br>
+30到49之间的消息号用于密钥交换方法，它们具体的含义将在密钥交换方法中进行定义。</br>
+60到79之间的消息号用于进行用户的校验授权，它们的含义将在用户授权方法中进行定义。</br>
+128到191之间的消息号必须通过IETF CONSENSUS方法进行分配，IETF CONSENSUS方法在文档[RFC2434]中有描述。</br>
+191到255之间的消息号则由IANA进行管理。这个范围内的消息号将会用于PRIVATE USE命名空间。
+
+## 4.2
