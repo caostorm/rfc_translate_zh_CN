@@ -87,4 +87,51 @@ string  data
 128到191之间的消息号必须通过IETF CONSENSUS方法进行分配，IETF CONSENSUS方法在文档[RFC2434]中有描述。</br>
 191到255之间的消息号则由IANA进行管理。这个范围内的消息号将会用于PRIVATE USE命名空间。
 
-## 4.2
+## 4.2 断开连接的原因的描述及相关代码
+断开消息"reason code"是一个无符号32位整形值(uint32)，其相关联的描述消息"description"是一个可读的字符串，用于描述连接断开的原因。
+
+### 4.2.1. 协议
+当数据包中包含SSH_MSG_DISCONNECT消息时，则必须同时包含一个介于0x00000001到0xFFFFFFFF之间的'reason code'。这一部分的详细内容在[SSH-TRANS]中有描述。
+
+### 4.2.2. 初始赋值
+下表中包含了SSH_MSG_DISCONNECT的描述和原因代码的初始值。
+|名称| 值|
+|:--|:--|
+| SSH_DISCONNECT_HOST_NOT_ALLOWED_TO_CONNECT | 1 |
+| SSH_DISCONNECT_PROTOCOL_ERROR | 2 |
+| SSH_DISCONNECT_KEY_EXCHANGE_FAILED | 3 |
+| SSH_DISCONNECT_RESERVED | 4 |
+| SSH_DISCONNECT_MAC_ERROR | 5 |
+| SSH_DISCONNECT_COMPRESSION_ERROR | 6 |
+| SSH_DISCONNECT_SERVICE_NOT_AVAILABLE | 7 |
+| SSH_DISCONNECT_PROTOCOL_VERSION_NOT_SUPPORTED | 8 |
+| SSH_DISCONNECT_HOST_KEY_NOT_VERIFIABLE | 9 |
+| SSH_DISCONNECT_CONNECTION_LOST | 10 |
+| SSH_DISCONNECT_BY_APPLICATION | 11 |
+| SSH_DISCONNECT_TOO_MANY_CONNECTIONS | 12 |
+| SSH_DISCONNECT_AUTH_CANCELLED_BY_USER | 13 |
+| SSH_DISCONNECT_NO_MORE_AUTH_METHODS_AVAILABLE | 14 |
+| SSH_DISCONNECT_ILLEGAL_USER_NAME | 15 |
+
+### 4.2.3. 其他将要分配的值
+断开消息的原因代码必须按照顺序进行分配。新的断开消息的原因代码和他们相关的描述文本，都必须通过IETF CONSENSUS方法进行分配（在[RFC2434]中有描述），他们的取值范围为：0x00000010到0xFDFFFFFF。IANA不会为断开消息的原因代码分配0xFE000000到0xFFFFFFFF之间的值，这个范围内的值用作断开消息的原因代码时，仅限于私有域。
+
+## 4.3. 通道连接失败原因代码和描述
+连接失败原因代码时一个无符号32位整型数(uint32)。连接失败原因的描述文本是一个可读的信息，用来描述通道连接失败的原因。这一部分在文档[SSH-CONNECT]中有描述。
+
+### 4.3.1. 协议
+当数据包中包含SSH_MSG_CHANNEL_OPEN_FAILURE消息时，必须包含一个原因代码，原因代码的取值范围为：0x00000001到0xFFFFFFFF。
+
+### 4.3.2. 初始赋值
+以下表格中包含了原因代码和描述的初始赋值。表格中给出的原因代码的值是一个可读的十进制数字，实际使用时，应该使用32位无符号数值。
+|名称|原因代码|
+|:--|:--|
+| SSH_OPEN_ADMINISTRATIVELY_PROHIBITED | 1 |
+| SSH_OPEN_CONNECT_FAILED | 2 |
+| SSH_OPEN_UNKNOWN_CHANNEL_TYPE | 3 |
+| SSH_OPEN_RESOURCE_SHORTAGE | 4 |
+
+### 4.3.3. 其他将要分配的值
+通道连接失败的原因代码必须按照顺序进行分配。当请求一个新的通道连接失败的原因代码和描述字符串时，必须依照IETF CONSENSUS方法进行分配（在文档[RFC2434]中有描述），他们的取值范围为0x00000005到0xFDFFFFFF。IANA不会为通道连接失败的原因代码分配0xFE000000到0xFFFFFFFF之间的值，这个范围内的值仅用于私有域(PRIVATE USE)，私有域在文档[RFC2434]中有描述。
+
+### 4.3.4 
